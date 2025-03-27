@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class HospitalManagementSystemApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HospitalManagementSystemApplication.class, args); // new comment added
+		SpringApplication.run(HospitalManagementSystemApplication.class, args); // new comment added fgfg
 	}
 
 }
