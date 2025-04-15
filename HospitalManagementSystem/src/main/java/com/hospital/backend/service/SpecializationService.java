@@ -11,5 +11,6 @@ public interface SpecializationService {
     Specialization updateSpecialization(int id, Specialization specialization);
     void deleteSpecialization(int id);
     Optional<Specialization> findByName(String name);
-   
+    boolean existsById(int id);
+    Optional<Specialization> findById(int id);
 }
