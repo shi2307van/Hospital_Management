@@ -10,7 +10,15 @@ public class Doctor {
     private Integer Experience;
     private String Password;
     private Integer Sp_Id;
+    public String getPicture() {
+		return picture;
+	}
 
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
+	private String picture;
     // Default constructor
     public Doctor() {}
 
@@ -86,4 +94,7 @@ public class Doctor {
     public void setSp_Id(Integer Sp_Id) {
         this.Sp_Id = Sp_Id;
     }
+
+
+
 }

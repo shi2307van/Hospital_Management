@@ -15,4 +15,6 @@ public interface PrescriptionService {
     List<Prescription> findByAppointmentId(int appointmentId);
     List<Prescription> findActivePrescriptions(int patientId);
     List<Prescription> findPrescriptionsByDate(String date);
+    Optional<Prescription> findById(int id);
+	boolean existsById(int id);
 }

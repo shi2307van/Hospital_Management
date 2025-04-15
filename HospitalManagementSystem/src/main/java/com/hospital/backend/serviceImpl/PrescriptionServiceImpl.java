@@ -1,4 +1,4 @@
-package com.hospital.backend.service.impl;
+package com.hospital.backend.serviceImpl;
 
 import com.hospital.backend.entity.Prescription;
 import com.hospital.backend.repository.PrescriptionRepository;
@@ -33,7 +33,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public Prescription updatePrescription(int id, Prescription prescription) {
         if (prescriptionRepository.existsById(id)) {
-            prescription.setId(id);
+            prescription.setPr_ID(id);
             return prescriptionRepository.save(prescription);
         }
         throw new RuntimeException("Prescription not found with id: " + id);
@@ -41,6 +41,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public void deletePrescription(int id) {
+    	
         prescriptionRepository.deleteById(id);
     }
 
@@ -67,5 +68,14 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public List<Prescription> findPrescriptionsByDate(String date) {
         return prescriptionRepository.findByDate(date);
+    }
+    @Override
+    public Optional<Prescription> findById(int id) {
+        return prescriptionRepository.findById(id);
+    }
+
+    @Override
+    public boolean existsById(int id) {
+        return prescriptionRepository.existsById(id);
     }
 }
