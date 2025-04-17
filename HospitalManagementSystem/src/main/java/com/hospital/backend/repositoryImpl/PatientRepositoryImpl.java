@@ -51,6 +51,7 @@ public class PatientRepositoryImpl implements PatientRepository {
         String sql = "SELECT * FROM patient WHERE Blood_Group = ?";
         return jdbcTemplate.query(sql, patientRowMapper, bloodGroup);
     }
+    
     @Override
     public List<Patient> searchPatientsByName(String name) {
         String sql = "SELECT * FROM patient WHERE LOWER(name) LIKE LOWER(?)";
@@ -61,6 +62,7 @@ public class PatientRepositoryImpl implements PatientRepository {
         String sql = "SELECT * FROM patient WHERE Mobile_No LIKE ?";
         return jdbcTemplate.query(sql, patientRowMapper, "%" + contact + "%");
     }
+    
     @Override
     public Patient save(Patient patient) {
         if (patient.getpId() == 0) {
