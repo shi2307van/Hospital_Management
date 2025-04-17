@@ -15,79 +15,57 @@ import java.util.Optional;
 
 @Repository
 public class PatientRepositoryImpl implements PatientRepository {
-    
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     private final RowMapper<Patient> patientRowMapper = new RowMapper<Patient>() {
         @Override
         public Patient mapRow(ResultSet rs, int rowNum) throws SQLException {
             Patient patient = new Patient();
-            patient.setpId(rs.getInt("pId"));
-            patient.setName(rs.getString("name"));
-            patient.setDob(rs.getObject("dob", LocalDate.class));
-            patient.setAge(rs.getInt("age"));
-            patient.setGender(rs.getString("gender"));
-            patient.setBloodGroup(rs.getString("bloodGroup"));
-            patient.setMobileNo(rs.getString("mobileNo"));
-            patient.setEmail(rs.getString("email"));
-            patient.setAddress(rs.getString("address"));
-            patient.setPassword(rs.getString("password"));
+            patient.setpId(rs.getInt("P_ID"));
+            patient.setName(rs.getString("Name"));
+            patient.setDob(rs.getObject("DOB", LocalDate.class));
+            patient.setAge(rs.getInt("Age"));
+            patient.setGender(rs.getString("Gender"));
+            patient.setBloodGroup(rs.getString("Blood_Group"));
+            patient.setMobileNo(rs.getString("Mobile_No"));
+            patient.setEmail(rs.getString("Email"));
+            patient.setAddress(rs.getString("Address"));
+            patient.setPassword(rs.getString("Password"));
             return patient;
         }
     };
-
     @Override
-    public Optional<Patient> findById(int id) {
-        String sql = "SELECT * FROM patient WHERE pId = ?";
+    public Optional<Patient> getPatientById(int id) {
+        String sql = "SELECT * FROM patient WHERE P_ID = ?";
         List<Patient> patients = jdbcTemplate.query(sql, patientRowMapper, id);
         return patients.isEmpty() ? Optional.empty() : Optional.of(patients.get(0));
     }
-
     @Override
     public Optional<Patient> findByEmail(String email) {
-        String sql = "SELECT * FROM patient WHERE email = ?";
+        String sql = "SELECT * FROM patient WHERE Email = ?";
         List<Patient> patients = jdbcTemplate.query(sql, patientRowMapper, email);
         return patients.isEmpty() ? Optional.empty() : Optional.of(patients.get(0));
     }
-
     @Override
-    public boolean existsByEmail(String email) {
-        String sql = "SELECT COUNT(*) FROM patient WHERE email = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
-        return count != null && count > 0;
-    }
-
-    @Override
-    public List<Patient> findByBloodGroup(String bloodGroup) {
-        String sql = "SELECT * FROM patient WHERE bloodGroup = ?";
+    public List<Patient> getPatientsByBloodGroup(String bloodGroup) {
+        String sql = "SELECT * FROM patient WHERE Blood_Group = ?";
         return jdbcTemplate.query(sql, patientRowMapper, bloodGroup);
     }
-
     @Override
-    public List<Patient> findByStatus(String status) {
-        // Assuming there's a status field or using an alternative implementation
-        String sql = "SELECT * FROM patient WHERE status = ?";
-        return jdbcTemplate.query(sql, patientRowMapper, status);
-    }
-
-    @Override
-    public List<Patient> findByNameContainingIgnoreCase(String name) {
+    public List<Patient> searchPatientsByName(String name) {
         String sql = "SELECT * FROM patient WHERE LOWER(name) LIKE LOWER(?)";
         return jdbcTemplate.query(sql, patientRowMapper, "%" + name + "%");
     }
-
     @Override
     public List<Patient> findByContactContaining(String contact) {
-        String sql = "SELECT * FROM patient WHERE mobileNo LIKE ?";
+        String sql = "SELECT * FROM patient WHERE Mobile_No LIKE ?";
         return jdbcTemplate.query(sql, patientRowMapper, "%" + contact + "%");
     }
-
     @Override
     public Patient save(Patient patient) {
         if (patient.getpId() == 0) {
-            String sql = "INSERT INTO patient (name, dob, age, gender, bloodGroup, mobileNo, email, address, password) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        	String sql = "INSERT INTO patient (Name, DOB, Age, Gender, Blood_Group, Mobile_No, Email, Address, Password) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             jdbcTemplate.update(sql, 
                 patient.getName(),
                 patient.getDob(),
@@ -100,8 +78,8 @@ public class PatientRepositoryImpl implements PatientRepository {
                 patient.getPassword());
             return patient;
         } else {
-            String sql = "UPDATE patient SET name = ?, dob = ?, age = ?, gender = ?, " +
-                        "bloodGroup = ?, mobileNo = ?, email = ?, address = ?, password = ? WHERE pId = ?";
+            String sql = "UPDATE patient SET Name = ?, DOB = ?, Age = ?, Gender = ?, " +
+                        "Blood_Group = ?, Mobile_No = ?, Email = ?, Address = ?, Password = ? WHERE P_ID = ?";
             jdbcTemplate.update(sql,
                 patient.getName(),
                 patient.getDob(),
@@ -116,25 +94,21 @@ public class PatientRepositoryImpl implements PatientRepository {
             return patient;
         }
     }
-
     @Override
-    public void deleteById(int id) {
-        String sql = "DELETE FROM patient WHERE pId = ?";
+    public void deletePatient(int id) {
+        String sql = "DELETE FROM patient WHERE P_ID = ?";
         jdbcTemplate.update(sql, id);
     }
-
     @Override
-    public List<Patient> findAll() {
+    public List<Patient> getAllPatients() {
         String sql = "SELECT * FROM patient";
-        return jdbcTemplate.query(sql, patientRowMapper);
+        try {
+            return jdbcTemplate.query(sql, patientRowMapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
-
-    @Override
-    public Patient register(Patient patient) {
-        // Set any default values if needed
-        return save(patient);
-    }
-
     @Override
     public Patient update(Patient patient) {
         if (patient.getpId() == 0) {
@@ -142,31 +116,9 @@ public class PatientRepositoryImpl implements PatientRepository {
         }
         return save(patient);
     }
-
-
-
-    @Override
-    public List<Patient> getActivePatients() {
-        // Assuming there's a status field or this method is not needed
-        return findByStatus("Active");
-    }
-
-    @Override
-    public List<Patient> getPatientsByBloodGroup(String bloodGroup) {
-        return findByBloodGroup(bloodGroup);
-    }
-
-    @Override
-    public Patient updateMedicalHistory(int id, String medicalHistory) {
-        // Assuming there's a medicalHistory field or this method is not needed
-        String sql = "UPDATE patient SET medicalHistory = ? WHERE pId = ?";
-        jdbcTemplate.update(sql, medicalHistory, id);
-        
-        return findById(id).orElse(null);
-    }
     @Override
     public boolean existsById(int id) {
-        String sql = "SELECT COUNT(*) FROM patient WHERE pId = ?";
+        String sql = "SELECT COUNT(*) FROM patient WHERE P_ID = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count != null && count > 0;
     }

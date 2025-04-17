@@ -20,19 +20,26 @@ public class PatientServiceImpl implements PatientService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Patient savePatient(Patient patient) {
-        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+    public Patient save(Patient patient) {
+        // Add null check but skip encoding
+        if (patient.getPassword() != null && !patient.getPassword().isEmpty()) {
+            // Skip encoding - just use password as-is
+            // patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+            System.out.println("Password received: " + patient.getPassword()); // Debug log
+        } else {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
         return patientRepository.save(patient);
     }
 
     @Override
     public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+        return patientRepository.getAllPatients();
     }
 
     @Override
     public Optional<Patient> getPatientById(int id) {
-        return patientRepository.findById(id);
+        return patientRepository.getPatientById(id);
     }
 
     @Override
@@ -46,7 +53,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public void deletePatient(int id) {
-        patientRepository.deleteById(id);
+        patientRepository.deletePatient(id);
     }
 
     @Override
@@ -54,47 +61,27 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.findByEmail(email);
     }
 
-    @Override
-    public boolean existsByEmail(String email) {
-        return patientRepository.existsByEmail(email);
-    }
+
 
     @Override
-    public List<Patient> findByBloodGroup(String bloodGroup) {
-        return patientRepository.findByBloodGroup(bloodGroup);
+    public List<Patient> getPatientsByBloodGroup(String bloodGroup) {
+        return patientRepository.getPatientsByBloodGroup(bloodGroup);
     }
 
-    @Override
-    public Patient updatePatientProfile(int id, Patient patient) {
-        Patient existingPatient = patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + id));
-        
-        existingPatient.setpId(patient.getpId());
-        existingPatient.setName(patient.getName());
-        existingPatient.setAddress(patient.getAddress());
-        existingPatient.setBloodGroup(patient.getBloodGroup());
-        existingPatient.setAge(patient.getAge());
-        existingPatient.setDob(patient.getDob());
-        existingPatient.setEmail(patient.getEmail());
-        existingPatient.setGender(patient.getGender());
-        existingPatient.setMobileNo(patient.getMobileNo());
-        existingPatient.setPassword(patient.getPassword());
-        
-        return patientRepository.save(existingPatient);
-    }
-
-    @Override
-    public boolean validatePatientCredentials(String email, String password) {
-        Optional<Patient> patient = patientRepository.findByEmail(email);
-        return patient.isPresent() && passwordEncoder.matches(password, patient.get().getPassword());
-    }
-
-    @Override
-    public List<Patient> findActivePatients() {
-        return patientRepository.findByStatus("Active");
-    }
     @Override
     public boolean existsById(int id) {
         return patientRepository.existsById(id);
     }
+    public List<Patient> searchPatientsByName(String name){
+		return patientRepository.searchPatientsByName(name);
+    	
+    }
+
+	@Override
+	public List<Patient> findByContactContaining(String contact) {
+		return patientRepository.findByContactContaining(contact);
+	}
+
+
+
 } 
