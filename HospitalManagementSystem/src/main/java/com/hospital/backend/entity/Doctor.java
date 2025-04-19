@@ -1,16 +1,89 @@
 package com.hospital.backend.entity;
 
 public class Doctor {
-    private int DR_ID;
-    private String Dr_name;
-    private String Mobile_no;
-    private String Email_id;
-    private String Gender;
-    private Integer Age;
-    private Integer Experience;
-    private String Password;
-    private Integer Sp_Id;
-    public String getPicture() {
+	private int drId;
+	private String drName;
+    private String mobileNo;
+    private String emailId;
+    private String gender;
+    private Integer age;
+    private Integer experience;
+    private String password;
+    private Integer spId;
+    private String picture;
+    public int getDrId() {
+		return drId;
+	}
+
+	public void setDrId(int drId) {
+		this.drId = drId;
+	}
+
+	public String getDrName() {
+		return drName;
+	}
+
+	public void setDrName(String drName) {
+		this.drName = drName;
+	}
+
+	public String getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getSpId() {
+		return spId;
+	}
+
+	public void setSpId(Integer spId) {
+		this.spId = spId;
+	}
+
+	public String getPicture() {
 		return picture;
 	}
 
@@ -18,83 +91,11 @@ public class Doctor {
 		this.picture = picture;
 	}
 
-	private String picture;
+    
     // Default constructor
     public Doctor() {}
 
-    // Getters and Setters
-    public int getDR_ID() {
-        return DR_ID;
-    }
-
-    public void setDR_ID(int DR_ID) {
-        this.DR_ID = DR_ID;
-    }
-
-    public String getDr_name() {
-        return Dr_name;
-    }
-
-    public void setDr_name(String Dr_name) {
-        this.Dr_name = Dr_name;
-    }
-
-    public String getMobile_no() {
-        return Mobile_no;
-    }
-
-    public void setMobile_no(String Mobile_no) {
-        this.Mobile_no = Mobile_no;
-    }
-
-    public String getEmail_id() {
-        return Email_id;
-    }
-
-    public void setEmail_id(String Email_id) {
-        this.Email_id = Email_id;
-    }
-
-    public String getGender() {
-        return Gender;
-    }
-
-    public void setGender(String Gender) {
-        this.Gender = Gender;
-    }
-
-    public Integer getAge() {
-        return Age;
-    }
-
-    public void setAge(Integer Age) {
-        this.Age = Age;
-    }
-
-    public Integer getExperience() {
-        return Experience;
-    }
-
-    public void setExperience(Integer Experience) {
-        this.Experience = Experience;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String Password) {
-        this.Password = Password;
-    }
-
-    public Integer getSp_Id() {
-        return Sp_Id;
-    }
-
-    public void setSp_Id(Integer Sp_Id) {
-        this.Sp_Id = Sp_Id;
-    }
-
+    
 
 
 }

@@ -22,21 +22,22 @@ public class DoctorRepositoryImpl implements DoctorRepository {
         @Override
         public Doctor mapRow(ResultSet rs, int rowNum) throws SQLException {
             Doctor doctor = new Doctor();
-            doctor.setDR_ID(rs.getInt("DR_ID"));
-            doctor.setDr_name(rs.getString("Dr_name"));
-            doctor.setMobile_no(rs.getString("Mobile_no"));
-            doctor.setEmail_id(rs.getString("Email"));
+            doctor.setDrId(rs.getInt("DR_ID"));
+            doctor.setDrName(rs.getString("Dr_name"));
+            doctor.setMobileNo(rs.getString("Mobile_no"));
+            doctor.setEmailId(rs.getString("Email_id"));
             doctor.setGender(rs.getString("Gender"));
             doctor.setAge(rs.getInt("Age"));
             doctor.setExperience(rs.getInt("Experience"));
             doctor.setPassword(rs.getString("Password"));
-            doctor.setSp_Id(rs.getInt("Sp_Id"));
+            doctor.setSpId(rs.getInt("Sp_Id"));
+            doctor.setPicture(rs.getString("picture"));
             return doctor;
         }
     };
 
     @Override
-    public Optional<Doctor> findById(int id) {
+    public Optional<Doctor> getDoctorById(int id) {
         String sql = "SELECT * FROM doctor WHERE DR_ID = ?";
         List<Doctor> doctors = jdbcTemplate.query(sql, doctorRowMapper, id);
         return doctors.isEmpty() ? Optional.empty() : Optional.of(doctors.get(0));
@@ -44,119 +45,83 @@ public class DoctorRepositoryImpl implements DoctorRepository {
 
     @Override
     public Optional<Doctor> findByEmail(String email) {
-        String sql = "SELECT * FROM doctor WHERE Email = ?";
+        String sql = "SELECT * FROM doctor WHERE Email_id = ?";
         List<Doctor> doctors = jdbcTemplate.query(sql, doctorRowMapper, email);
         return doctors.isEmpty() ? Optional.empty() : Optional.of(doctors.get(0));
     }
 
-    @Override
-    public boolean existsByEmail(String email) {
-        String sql = "SELECT COUNT(*) FROM doctor WHERE Email = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
-        return count != null && count > 0;
-    }
+
 
     @Override
-    public List<Doctor> findBySpecialization(String specialization) {
-        String sql = "SELECT d.* FROM doctor d JOIN specializations s ON d.Sp_Id = s.ID WHERE s.name = ?";
-        return jdbcTemplate.query(sql, doctorRowMapper, specialization);
-    }
-
-    @Override
-    public List<Doctor> findByStatus(String status) {
-        // Assuming there's a status field, if not we could adapt this method
-        String sql = "SELECT * FROM doctor WHERE status = ?";
-        return jdbcTemplate.query(sql, doctorRowMapper, status);
-    }
-
-    @Override
-    public List<Doctor> findByStatusAndSpecialization(String status, String specialization) {
-        String sql = "SELECT d.* FROM doctor d JOIN specializations s ON d.Sp_Id = s.ID WHERE d.status = ? AND s.name = ?";
-        return jdbcTemplate.query(sql, doctorRowMapper, status, specialization);
-    }
-
-    @Override
-    public List<Doctor> findByNameContainingIgnoreCase(String name) {
+    public List<Doctor> searchDoctorsByName(String name) {
         String sql = "SELECT * FROM doctor WHERE LOWER(Dr_name) LIKE LOWER(?)";
         return jdbcTemplate.query(sql, doctorRowMapper, "%" + name + "%");
     }
 
     @Override
-    public Doctor save(Doctor doctor) {
-        if (doctor.getDR_ID() == 0) {
-            String sql = "INSERT INTO doctor (Dr_name, Mobile_no, Email, Gender, Age, Experience, Password, Sp_Id) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public Doctor saveDoctor(Doctor doctor) {
+        if (doctor.getDrId() == 0) {
+            String sql = "INSERT INTO doctor (Dr_name, Mobile_no, Email_id, Gender, Age, Experience, Password, Sp_Id, picture) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
             jdbcTemplate.update(sql, 
-                doctor.getDr_name(),
-                doctor.getMobile_no(),
-                doctor.getEmail_id(),
+                doctor.getDrName(),
+                doctor.getMobileNo(),
+                doctor.getEmailId(),
                 doctor.getGender(),
                 doctor.getAge(),
                 doctor.getExperience(),
                 doctor.getPassword(),
-                doctor.getSp_Id());
+                doctor.getSpId(),
+                doctor.getPicture());  // Added this parameter to the method call
+                
             return doctor;
-        } else {
-            String sql = "UPDATE doctor SET Dr_name = ?, Mobile_no = ?, Email = ?, Gender = ?, " +
-                        "Age = ?, Experience = ?, Password = ?, Sp_Id = ? WHERE DR_ID = ?";
+        }else {
+        // You need to add an else block here or handle updates else {
+            String sql = "UPDATE doctor SET Dr_name = ?, Mobile_no = ?, Email_id = ?, Gender = ?, Age = ?, Experience = ?, Password = ?, Sp_Id = ?, picture = ? WHERE DR_ID = ?";
             jdbcTemplate.update(sql,
-                doctor.getDr_name(),
-                doctor.getMobile_no(),
-                doctor.getEmail_id(),
-                doctor.getGender(),
+            		doctor.getDrName(),
+                    doctor.getMobileNo(),
+                    doctor.getEmailId(),
+                    doctor.getGender(),
                 doctor.getAge(),
                 doctor.getExperience(),
                 doctor.getPassword(),
-                doctor.getSp_Id(),
-                doctor.getDR_ID());
+                doctor.getSpId(),
+                doctor.getPicture(),
+                doctor.getDrId());
             return doctor;
         }
+    
     }
-
     @Override
-    public void deleteById(int id) {
+    public void deleteDoctor(int id) {
         String sql = "DELETE FROM doctor WHERE DR_ID = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public List<Doctor> findAll() {
+    public List<Doctor> getAllDoctors() {
         String sql = "SELECT * FROM doctor";
         return jdbcTemplate.query(sql, doctorRowMapper);
     }
 
-    @Override
-    public Doctor register(Doctor doctor) {
-        return save(doctor);
-    }
 
     @Override
-    public Doctor update(Doctor doctor) {
-        if (doctor.getDR_ID() == 0) {
+    public Doctor updateDoctor(Doctor doctor) {
+        if (doctor.getDrId() == 0) {
             throw new IllegalArgumentException("Doctor ID must be provided for update");
         }
-        return save(doctor);
+        return saveDoctor(doctor);
     }
 
-    @Override
-    public Doctor changeStatus(int id, String status) {
-        // If there's no status field, this method might need to be adapted
-        String sql = "UPDATE doctor SET status = ? WHERE DR_ID = ?";
-        jdbcTemplate.update(sql, status, id);
-        
-        return findById(id).orElse(null);
-    }
-
-    @Override
-    public List<Doctor> getActiveDoctors() {
-        // If there's no status field, this method might need to be adapted
-        return findByStatus("Active");
-    }
-
+ 
     @Override
     public List<Doctor> getDoctorsBySpecialization(String specialization) {
-        return findBySpecialization(specialization);
+    	String sql = " SELECT d.* FROM doctor d JOIN speclization s ON d.Sp_Id = s.Sp_Id WHERE s.Sp_Name = ?";
+        return jdbcTemplate.query(sql, doctorRowMapper, specialization);
     }
+    
     @Override
     public boolean existsById(int id) {
         String sql = "SELECT COUNT(*) FROM doctor WHERE DR_ID = ?";

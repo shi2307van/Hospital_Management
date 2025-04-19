@@ -10,12 +10,8 @@ public interface DoctorService {
     Optional<Doctor> getDoctorById(int id);
     Doctor updateDoctor(int id, Doctor doctor);
     void deleteDoctor(int id);
+    List<Doctor> getDoctorsBySpecialization(String specialization);
+    List<Doctor> searchDoctorsByName(String name);
     Optional<Doctor> findByEmail(String email);
-    boolean existsByEmail(String email);
-    List<Doctor> findBySpecialization(String specialization);
-    List<Doctor> findByStatus(String status);
-    Doctor updateDoctorProfile(int id, Doctor doctor);
-    List<Doctor> findAvailableDoctors();
-    boolean validateDoctorCredentials(String email, String password);
-    boolean existsById(int id);
+	boolean existsById(int id);   
 }

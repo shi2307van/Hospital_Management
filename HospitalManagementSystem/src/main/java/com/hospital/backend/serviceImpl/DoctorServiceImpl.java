@@ -21,32 +21,40 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor saveDoctor(Doctor doctor) {
-        doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
-        return doctorRepository.save(doctor);
+        // Add null check for password
+        if (doctor.getPassword() != null && !doctor.getPassword().isEmpty()) {
+            // Skip encoding - use password as-is
+            System.out.println("Password received: " + doctor.getPassword()); // Debug log
+            // Note: password will be stored as plain text
+        } else {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+        
+        return doctorRepository.saveDoctor(doctor);
     }
 
     @Override
     public List<Doctor> getAllDoctors() {
-        return doctorRepository.findAll();
+        return doctorRepository.getAllDoctors();
     }
 
     @Override
     public Optional<Doctor> getDoctorById(int id) {
-        return doctorRepository.findById(id);
+        return doctorRepository.getDoctorById(id);
     }
 
     @Override
     public Doctor updateDoctor(int id, Doctor doctor) {
         if (doctorRepository.existsById(id)) {
-            doctor.setDR_ID(id);
-            return doctorRepository.save(doctor);
+            doctor.setDrId(id);
+            return doctorRepository.updateDoctor(doctor);
         }
         throw new RuntimeException("Doctor not found with id: " + id);
     }
 
     @Override
     public void deleteDoctor(int id) {
-        doctorRepository.deleteById(id);
+        doctorRepository.deleteDoctor(id);
     }
 
     @Override
@@ -54,57 +62,19 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorRepository.findByEmail(email);
     }
 
-    @Override
-    public boolean existsByEmail(String email) {
-        return doctorRepository.existsByEmail(email);
-    }
-
-    @Override
-    public List<Doctor> findBySpecialization(String specialization) {
-        return doctorRepository.findBySpecialization(specialization);
-    }
-
-    @Override
-    public List<Doctor> findByStatus(String status) {
-        return doctorRepository.findByStatus(status);
-    }
-
-
-
-    @Override
-    public Doctor updateDoctorProfile(int id, Doctor doctor) {
-        Doctor existingDoctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + id));
-        
-        
-        existingDoctor.setDr_name(doctor.getDr_name());
-        existingDoctor.setSp_Id(doctor.getSp_Id());
-        existingDoctor.setMobile_no(doctor.getMobile_no());
-        existingDoctor.setAge(doctor.getAge());
-        existingDoctor.setExperience(doctor.getExperience());
-        existingDoctor.setDR_ID(doctor.getDR_ID());
-        existingDoctor.setEmail_id(doctor.getEmail_id());
-        existingDoctor.setGender(doctor.getGender());
-        existingDoctor.setPassword(doctor.getPassword());
-        existingDoctor.setPicture(doctor.getPicture());
    
-        
-        return doctorRepository.save(existingDoctor);
+    @Override
+    public List<Doctor> getDoctorsBySpecialization(String specialization) {
+        return doctorRepository.getDoctorsBySpecialization(specialization);
     }
 
-    @Override
-    public List<Doctor> findAvailableDoctors() {
-        return doctorRepository.findByStatus("Available");
-    }
+	@Override
+	public List<Doctor> searchDoctorsByName(String name) {
+		return doctorRepository.searchDoctorsByName(name);
+	}
 
-    @Override
-    public boolean validateDoctorCredentials(String email, String password) {
-        Optional<Doctor> doctor = doctorRepository.findByEmail(email);
-        return doctor.isPresent() && passwordEncoder.matches(password, doctor.get().getPassword());
-    }
-
-    @Override
-    public boolean existsById(int id) {
-        return doctorRepository.existsById(id);
-    }
+	@Override
+	public boolean existsById(int id) {
+		return doctorRepository.existsById(id);
+	}
 }
