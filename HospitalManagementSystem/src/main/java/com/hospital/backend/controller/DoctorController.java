@@ -18,6 +18,11 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
+    @PostMapping
+    public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
+        return new ResponseEntity<>(doctorService.saveDoctor(doctor), HttpStatus.CREATED);
+    }
+    
     @GetMapping
     public ResponseEntity<List<Doctor>> getAllDoctors() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
@@ -30,19 +35,17 @@ public class DoctorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
-        return new ResponseEntity<>(doctorService.saveDoctor(doctor), HttpStatus.CREATED);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Doctor> updateDoctor(@PathVariable int id, @RequestBody Doctor doctor) {
-        try {
-            Doctor updatedDoctor = doctorService.updateDoctor(id, doctor);
-            return ResponseEntity.ok(updatedDoctor);
-        } catch (RuntimeException e) {
+        doctor.setDrId(id); // Set ID from path variable
+        
+        if (!doctorService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+        
+        Doctor updatedDoctor = doctorService.saveDoctor(doctor);
+        return ResponseEntity.ok(updatedDoctor);
     }
 
     @DeleteMapping("/{id}")
@@ -53,26 +56,17 @@ public class DoctorController {
 
     @GetMapping("/specialization/{specialization}")
     public ResponseEntity<List<Doctor>> getDoctorsBySpecialization(@PathVariable String specialization) {
-        return ResponseEntity.ok(doctorService.findBySpecialization(specialization));
+        return ResponseEntity.ok(doctorService.getDoctorsBySpecialization(specialization));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<Doctor>> searchDoctorsByName(@RequestParam String name) {
-        return ResponseEntity.ok(doctorService.findByNameContainingIgnoreCase(name));
+        return ResponseEntity.ok(doctorService.searchDoctorsByName(name));
+    }
+    
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Optional<Doctor>> findByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(doctorService.findByEmail(email));
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Doctor>> getDoctorsByStatus(@PathVariable String status) {
-        return ResponseEntity.ok(doctorService.findByStatus(status));
-    }
-
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Doctor> updateDoctorStatus(@PathVariable int id, @RequestParam String status) {
-        return ResponseEntity.ok(doctorService.updateDoctorStatus(id, status));
-    }
-
-    @PutMapping("/{id}/profile")
-    public ResponseEntity<Doctor> updateDoctorProfile(@PathVariable int id, @RequestBody Doctor doctor) {
-        return ResponseEntity.ok(doctorService.updateDoctorProfile(id, doctor));
-    }
 }
