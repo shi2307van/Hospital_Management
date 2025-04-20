@@ -18,69 +18,71 @@ public class AppointmentServiceImpl implements AppointmentService {
     private AppointmentRepository appointmentRepository;
 
     @Override
-    public Appointment saveAppointment(Appointment appointment) {
-        return appointmentRepository.save(appointment);
+    public Appointment createAppointment(Appointment appointment) {
+        return appointmentRepository.createAppointment(appointment);
     }
 
     @Override
     public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
+        return appointmentRepository.getAllAppointments();
     }
 
     @Override
     public Optional<Appointment> getAppointmentById(int id) {
-        return appointmentRepository.findById(id);
+        return appointmentRepository.getAppointmentById(id);
     }
 
     @Override
     public Appointment updateAppointment(int id, Appointment appointment) {
         if (appointmentRepository.existsById(id)) {
-            appointment.setAp_ID(id);
-            return appointmentRepository.save(appointment);
+            appointment.setApId(id);
+            return appointmentRepository.updateAppointment(appointment);
         }
         throw new RuntimeException("Appointment not found with id: " + id);
     }
 
     @Override
     public void deleteAppointment(int id) {
-        appointmentRepository.deleteById(id);
+        appointmentRepository.deleteAppointment(id);
     }
 
     @Override
-    public List<Appointment> findByDoctorId(int doctorId) {
-        return appointmentRepository.findByDoctorId(doctorId);
+    public List<Appointment> getAppointmentsByDoctor(int doctorId) {
+        return appointmentRepository.getAppointmentsByDoctor(doctorId);
     }
 
     @Override
-    public List<Appointment> findByPatientId(int patientId) {
-        return appointmentRepository.findByPatientId(patientId);
+    public List<Appointment> getAppointmentsByPatient(int patientId) {
+        return appointmentRepository.getAppointmentsByPatient(patientId);
     }
 
     @Override
-    public List<Appointment> findByStatus(String status) {
-        return appointmentRepository.findByStatus(status);
+    public List<Appointment> getAppointmentsByStatus(String status) {
+        return appointmentRepository.getAppointmentsByStatus(status);
     }
 
     @Override
-    public List<Appointment> findByDate(String date) {
-        return appointmentRepository.findByDate(date);
+    public List<Appointment> getAppointmentsByDate(String date) {
+        return appointmentRepository.getAppointmentsByDate(date);
     }
 
     @Override
-    public List<Appointment> findUpcomingAppointments(int doctorId) {
-        String today = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-        return appointmentRepository.findByDoctorIdAndDateGreaterThanEqualAndStatus(doctorId, today, "Scheduled");
+    public List<Appointment> getUpcomingAppointments(int doctorId) {
+        return appointmentRepository.getUpcomingAppointments(doctorId);
     }
 
     @Override
-    public List<Appointment> findPastAppointments(int doctorId) {
-        String today = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-        return appointmentRepository.findByDoctorIdAndDateLessThan(doctorId, today);
+    public List<Appointment> getPastAppointments(int doctorId) {
+        return appointmentRepository.getPastAppointments(doctorId);
     }
 
     @Override
-    public List<Appointment> findTodayAppointments(int doctorId) {
-        String today = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-        return appointmentRepository.findByDoctorIdAndDate(doctorId, today);
+    public List<Appointment> getTodayAppointments(int doctorId) {
+        return appointmentRepository.getTodayAppointments(doctorId);
     }
+
+	@Override
+	public Appointment updateStatus(int id, String status) {
+		return appointmentRepository.updateStatus(id, status);
+	}
 }
