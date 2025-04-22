@@ -4,13 +4,10 @@ import com.hospital.backend.entity.Appointment;
 import com.hospital.backend.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -20,95 +17,74 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) {
-        return new ResponseEntity<>(appointmentService.createAppointment(appointment), HttpStatus.CREATED);
+    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
+    public Appointment createAppointment(@RequestBody Appointment appointment) {
+        return appointmentService.createAppointment(appointment);
     }
 
     @GetMapping
-    public ResponseEntity<List<Appointment>> getAllAppointments() {
-        return ResponseEntity.ok(appointmentService.getAllAppointments());
+    public List<Appointment> getAllAppointments() {
+        return appointmentService.getAllAppointments();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointmentById(@PathVariable int id) {
-        Optional<Appointment> appointment = appointmentService.getAppointmentById(id);
-        return appointment.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Appointment getAppointmentById(@PathVariable int id) {
+        return appointmentService.getAppointmentById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable int id, @RequestBody Appointment appointment) {
-        try {
-            Appointment updatedAppointment = appointmentService.updateAppointment(id, appointment);
-            return ResponseEntity.ok(updatedAppointment);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Appointment updateAppointment(@PathVariable int id, @RequestBody Appointment appointment) {
+        return appointmentService.updateAppointment(id, appointment);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAppointment(@PathVariable int id) {
+    @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    public void deleteAppointment(@PathVariable int id) {
         appointmentService.deleteAppointment(id);
-        return ResponseEntity.noContent().build();
     }
-
     
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByDoctor(@PathVariable int doctorId) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByDoctor(doctorId));
+    public List<Appointment> getAppointmentsByDoctor(@PathVariable int doctorId) {
+        return appointmentService.getAppointmentsByDoctor(doctorId);
     }
 
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByPatient(@PathVariable int patientId) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByPatient(patientId));
+    public List<Appointment> getAppointmentsByPatient(@PathVariable int patientId) {
+        return appointmentService.getAppointmentsByPatient(patientId);
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByStatus(@PathVariable String status) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByStatus(status));
+    public List<Appointment> getAppointmentsByStatus(@PathVariable String status) {
+        return appointmentService.getAppointmentsByStatus(status);
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByDate(
+    public List<Appointment> getAppointmentsByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByDate(date.toString()));
+        return appointmentService.getAppointmentsByDate(date.toString());
     }
 
-
     @PutMapping("/{id}/status")
-    public ResponseEntity<Appointment> updateAppointmentStatus(
+    public Appointment updateAppointmentStatus(
             @PathVariable int id, 
             @RequestParam String status) {
-        return ResponseEntity.ok(appointmentService.updateStatus(id, status));
+        return appointmentService.updateStatus(id, status);
     }
     
     @GetMapping("/doctor/{doctorId}/upcoming")
-    public ResponseEntity<List<Appointment>> getUpcomingAppointments(@PathVariable int doctorId) {
-        List<Appointment> appointments = appointmentService.getUpcomingAppointments(doctorId);
-        if (appointments.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(appointments);
+    public List<Appointment> getUpcomingAppointments(@PathVariable int doctorId) {
+        return appointmentService.getUpcomingAppointments(doctorId);
     }
 
     @GetMapping("/doctor/{doctorId}/past")
-    public ResponseEntity<List<Appointment>> getPastAppointments(@PathVariable int doctorId) {
-        List<Appointment> appointments = appointmentService.getPastAppointments(doctorId);
-        if (appointments.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(appointments);
+    public List<Appointment> getPastAppointments(@PathVariable int doctorId) {
+        return appointmentService.getPastAppointments(doctorId);
     }
 
     @GetMapping("/doctor/{doctorId}/today")
-    public ResponseEntity<List<Appointment>> getTodayAppointments(@PathVariable int doctorId) {
-        List<Appointment> appointments = appointmentService.getTodayAppointments(doctorId);
-        if (appointments.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(appointments);
+    public List<Appointment> getTodayAppointments(@PathVariable int doctorId) {
+        return appointmentService.getTodayAppointments(doctorId);
     }
-  
 }

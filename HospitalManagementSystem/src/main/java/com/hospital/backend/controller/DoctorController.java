@@ -4,7 +4,6 @@ import com.hospital.backend.entity.Doctor;
 import com.hospital.backend.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,54 +18,50 @@ public class DoctorController {
     private DoctorService doctorService;
 
     @PostMapping
-    public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
-        return new ResponseEntity<>(doctorService.saveDoctor(doctor), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Doctor createDoctor(@RequestBody Doctor doctor) {
+        return doctorService.saveDoctor(doctor);
     }
-    
+
     @GetMapping
-    public ResponseEntity<List<Doctor>> getAllDoctors() {
-        return ResponseEntity.ok(doctorService.getAllDoctors());
+    public List<Doctor> getAllDoctors() {
+        return doctorService.getAllDoctors();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctorById(@PathVariable int id) {
-        Optional<Doctor> doctor = doctorService.getDoctorById(id);
-        return doctor.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Doctor getDoctorById(@PathVariable int id) {
+        return doctorService.getDoctorById(id)
+                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + id));
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable int id, @RequestBody Doctor doctor) {
-        doctor.setDrId(id); // Set ID from path variable
-        
+    public Doctor updateDoctor(@PathVariable int id, @RequestBody Doctor doctor) {
         if (!doctorService.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Doctor not found with id: " + id);
         }
-        
-        Doctor updatedDoctor = doctorService.saveDoctor(doctor);
-        return ResponseEntity.ok(updatedDoctor);
+
+        doctor.setDrId(id);
+        return doctorService.saveDoctor(doctor);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDoctor(@PathVariable int id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDoctor(@PathVariable int id) {
         doctorService.deleteDoctor(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/specialization/{specialization}")
-    public ResponseEntity<List<Doctor>> getDoctorsBySpecialization(@PathVariable String specialization) {
-        return ResponseEntity.ok(doctorService.getDoctorsBySpecialization(specialization));
+    public List<Doctor> getDoctorsBySpecialization(@PathVariable String specialization) {
+        return doctorService.getDoctorsBySpecialization(specialization);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Doctor>> searchDoctorsByName(@RequestParam String name) {
-        return ResponseEntity.ok(doctorService.searchDoctorsByName(name));
-    }
-    
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Optional<Doctor>> findByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(doctorService.findByEmail(email));
+    public List<Doctor> searchDoctorsByName(@RequestParam String name) {
+        return doctorService.searchDoctorsByName(name);
     }
 
+    @GetMapping("/email/{email}")
+    public Optional<Doctor> findByEmail(@PathVariable String email) {
+        return doctorService.findByEmail(email);
+    }
 }
