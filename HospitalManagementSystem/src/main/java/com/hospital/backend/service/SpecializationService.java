@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SpecializationService {
-    Specialization saveSpecialization(Specialization specialization);
+    Specialization createSpecialization(Specialization specialization);
     List<Specialization> getAllSpecializations();
     Optional<Specialization> getSpecializationById(int id);
     Specialization updateSpecialization(int id, Specialization specialization);
     void deleteSpecialization(int id);
-    Optional<Specialization> findByName(String name);
+    Optional<Specialization> getSpecializationByName(String name);
     boolean existsById(int id);
-    Optional<Specialization> findById(int id);
 }
