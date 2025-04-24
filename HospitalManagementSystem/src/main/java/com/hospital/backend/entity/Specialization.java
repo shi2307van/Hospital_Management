@@ -1,30 +1,39 @@
 package com.hospital.backend.entity;
 
 public class Specialization {
-    private int Sp_Id;
-    private String Sp_Name;
+    private int spId;
+    private String spName;
   
     
-    public String getSp_Name() {
-		return Sp_Name;
+   
+	public int getSpId() {
+		return spId;
 	}
 
-	public void setSp_Name(String sp_Name) {
-		Sp_Name = sp_Name;
+
+
+	public void setSpId(int spId) {
+		this.spId = spId;
 	}
+
+
+
+	public String getSpName() {
+		return spName;
+	}
+
+
+
+	public void setSpName(String spName) {
+		this.spName = spName;
+	}
+
+
 
 	// Default constructor
     public Specialization() {}
     
-    // Getters and Setters
-    public int getSp_Id() {
-        return Sp_Id;
-    }
-    
-    public void setSp_Id(int Sp_Id) {
-        this.Sp_Id = Sp_Id;
-    }
-    
+   
   
   
 }

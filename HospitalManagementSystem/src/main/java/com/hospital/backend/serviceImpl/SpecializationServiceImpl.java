@@ -16,44 +16,38 @@ public class SpecializationServiceImpl implements SpecializationService {
     private SpecializationRepository specializationRepository;
 
     @Override
-    public Specialization saveSpecialization(Specialization specialization) {
-        return specializationRepository.save(specialization);
+    public Specialization createSpecialization(Specialization specialization) {
+        return specializationRepository.createSpecialization(specialization);
     }
 
     @Override
     public List<Specialization> getAllSpecializations() {
-        return specializationRepository.findAll();
+        return specializationRepository.getAllSpecializations();
     }
 
     @Override
     public Optional<Specialization> getSpecializationById(int id) {
-        return specializationRepository.findById(id);
+        return specializationRepository.getSpecializationById(id);
     }
 
     @Override
     public Specialization updateSpecialization(int id, Specialization specialization) {
         if (specializationRepository.existsById(id)) {
-            specialization.setSp_Id(id);
-            return specializationRepository.save(specialization);
+            specialization.setSpId(id);
+            return specializationRepository.createSpecialization(specialization);
         }
         throw new RuntimeException("Specialization not found with id: " + id);
     }
 
     @Override
     public void deleteSpecialization(int id) {
-        specializationRepository.deleteById(id);
+        specializationRepository.deleteSpecialization(id);
     }
 
     @Override
-    public Optional<Specialization> findByName(String name) {
-        return specializationRepository.findByName(name);
+    public Optional<Specialization> getSpecializationByName(String name) {
+        return specializationRepository.getSpecializationByName(name);
     }
-
-    @Override
-    public Optional<Specialization> findById(int id) {
-        return specializationRepository.findById(id);
-    }
-
 
     @Override
     public boolean existsById(int id) {
