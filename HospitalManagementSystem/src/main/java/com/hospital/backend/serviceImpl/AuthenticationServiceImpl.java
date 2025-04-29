@@ -38,14 +38,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         
         if (doctor.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), doctor.get().getPassword())) {
             String token = generateToken();
-            tokenUserMap.put(token, "DOCTOR_" + doctor.get().getDR_ID());
+            tokenUserMap.put(token, "DOCTOR_" + doctor.get().getDrId());
             
             return new LoginResponse(
                 token,
                 "DOCTOR",
-                doctor.get().getDR_ID(),
-                doctor.get().getDr_name(),
-                doctor.get().getEmail_id(),
+                doctor.get().getDrId(),
+                doctor.get().getDrName(),
+                doctor.get().getEmailId(),
                 "Login successful",
                 true
             );

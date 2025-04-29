@@ -16,25 +16,25 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     private PrescriptionRepository prescriptionRepository;
 
     @Override
-    public Prescription savePrescription(Prescription prescription) {
-        return prescriptionRepository.save(prescription);
+    public Prescription createPrescription(Prescription prescription) {
+        return prescriptionRepository.createPrescription(prescription);
     }
 
     @Override
     public List<Prescription> getAllPrescriptions() {
-        return prescriptionRepository.findAll();
+        return prescriptionRepository.getAllPrescriptions();
     }
 
     @Override
     public Optional<Prescription> getPrescriptionById(int id) {
-        return prescriptionRepository.findById(id);
+        return prescriptionRepository.getPrescriptionById(id);
     }
 
     @Override
     public Prescription updatePrescription(int id, Prescription prescription) {
         if (prescriptionRepository.existsById(id)) {
-            prescription.setPr_ID(id);
-            return prescriptionRepository.save(prescription);
+            prescription.setPrId(id);
+            return prescriptionRepository.createPrescription(prescription);
         }
         throw new RuntimeException("Prescription not found with id: " + id);
     }
@@ -42,36 +42,27 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public void deletePrescription(int id) {
     	
-        prescriptionRepository.deleteById(id);
+        prescriptionRepository.deletePrescription(id);
     }
 
     @Override
-    public List<Prescription> findByDoctorId(int doctorId) {
-        return prescriptionRepository.findByDoctorId(doctorId);
+    public List<Prescription> getPrescriptionsByDoctor(int doctorId) {
+        return prescriptionRepository.getPrescriptionsByDoctor(doctorId);
     }
 
     @Override
-    public List<Prescription> findByPatientId(int patientId) {
-        return prescriptionRepository.findByPatientId(patientId);
+    public List<Prescription> getPrescriptionsByPatient(int patientId) {
+        return prescriptionRepository.getPrescriptionsByPatient(patientId);
     }
 
     @Override
-    public List<Prescription> findByAppointmentId(int appointmentId) {
-        return prescriptionRepository.findByAppointmentId(appointmentId);
+    public List<Prescription> getPrescriptionsByAppointment(int appointmentId) {
+        return prescriptionRepository.getPrescriptionsByAppointment(appointmentId);
     }
 
     @Override
-    public List<Prescription> findActivePrescriptions(int patientId) {
-        return prescriptionRepository.findByPatientIdAndStatus(patientId, "Active");
-    }
-
-    @Override
-    public List<Prescription> findPrescriptionsByDate(String date) {
-        return prescriptionRepository.findByDate(date);
-    }
-    @Override
-    public Optional<Prescription> findById(int id) {
-        return prescriptionRepository.findById(id);
+    public List<Prescription> getPrescriptionsByDate(String date) {
+        return prescriptionRepository.getPrescriptionsByDate(date);
     }
 
     @Override
