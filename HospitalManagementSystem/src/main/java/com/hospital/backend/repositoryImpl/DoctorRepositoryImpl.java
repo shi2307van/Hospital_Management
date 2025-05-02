@@ -117,8 +117,8 @@ public class DoctorRepositoryImpl implements DoctorRepository {
 
  
     @Override
-    public List<Doctor> getDoctorsBySpecialization(String specialization) {
-    	String sql = " SELECT d.* FROM doctor d JOIN speclization s ON d.Sp_Id = s.Sp_Id WHERE s.Sp_Name = ?";
+    public List<Doctor> getDoctorsBySpecialization(int specialization) {
+    	String sql = "SELECT d.* FROM doctor d JOIN speclization s ON d.Sp_Id = s.Sp_Id WHERE s.Sp_Id = ?";
         return jdbcTemplate.query(sql, doctorRowMapper, specialization);
     }
     

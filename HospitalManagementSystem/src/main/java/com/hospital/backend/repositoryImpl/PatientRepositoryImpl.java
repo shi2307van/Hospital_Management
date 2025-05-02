@@ -81,7 +81,7 @@ public class PatientRepositoryImpl implements PatientRepository {
             return patient;
         } else {
             String sql = "UPDATE patient SET Name = ?, DOB = ?, Age = ?, Gender = ?, " +
-                        "Blood_Group = ?, Mobile_No = ?, Email = ?, Address = ?, Password = ? WHERE P_ID = ?";
+                        "Blood_Group = ?, Mobile_No = ?, Email = ?, Address = ? WHERE P_ID = ?";
             jdbcTemplate.update(sql,
                 patient.getName(),
                 patient.getDob(),
@@ -91,7 +91,6 @@ public class PatientRepositoryImpl implements PatientRepository {
                 patient.getMobileNo(),
                 patient.getEmail(),
                 patient.getAddress(),
-                patient.getPassword(),
                 patient.getpId());
             return patient;
         }
