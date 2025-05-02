@@ -64,7 +64,7 @@ public class DoctorServiceImpl implements DoctorService {
 
    
     @Override
-    public List<Doctor> getDoctorsBySpecialization(String specialization) {
+    public List<Doctor> getDoctorsBySpecialization(int specialization) {
         return doctorRepository.getDoctorsBySpecialization(specialization);
     }
 
