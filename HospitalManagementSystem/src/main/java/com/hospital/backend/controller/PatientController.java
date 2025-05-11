@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -69,5 +70,16 @@ public class PatientController {
             throw new RuntimeException("No patients found with contact containing: " + contact);
         }
         return patients;
+    }
+    @GetMapping("/doctor/{doctorId}")
+    public List<Patient> getPatientsByDoctor(@PathVariable int doctorId) {
+        return patientService.findByDoctorId(doctorId);
+    }
+    
+    @PutMapping("/{id}/change-password")
+    public Patient changePassword(@PathVariable int id, @RequestBody Map<String, String> passwordData) {
+        String currentPassword = passwordData.get("currentPassword");
+        String newPassword = passwordData.get("newPassword");
+        return patientService.changePassword(id, currentPassword, newPassword);
     }
 }

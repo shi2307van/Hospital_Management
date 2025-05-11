@@ -1,6 +1,8 @@
 package com.hospital.backend.repository;
 
 import com.hospital.backend.entity.Appointment;
+import com.hospital.backend.entity.Doctor;
+
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +21,7 @@ public interface AppointmentRepository {
     List<Appointment> getUpcomingAppointments(int doctorId);
     List<Appointment> getPastAppointments(int doctorId);
     List<Appointment> getTodayAppointments(int doctorId);
-
+    
     boolean existsById(int id);
 	
 }

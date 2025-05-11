@@ -6,6 +6,7 @@ import com.hospital.backend.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +83,34 @@ public class PatientServiceImpl implements PatientService {
 		return patientRepository.findByContactContaining(contact);
 	}
 
+	@Override
+	public List<Patient> findByDoctorId(int doctorId) {
+	    return patientRepository.findByDoctorId(doctorId);
+	}
 
-
+	  @Override
+	   @Transactional
+	   public Patient changePassword(int id, String currentPassword, String newPassword) {
+		    System.out.println("Changing password for patient ID: " + id);
+		    
+		    // Get patient by ID
+		    Patient patient = patientRepository.getPatientById(id)
+		            .orElseThrow(() -> new RuntimeException("Patient not found with id: " + id));
+		    
+		    // Validate current password
+		    if (!currentPassword.equals(patient.getPassword())) {
+		        throw new IllegalArgumentException("Current password is incorrect");
+		    }
+		    
+		    // Update password
+		    int rowsUpdated = patientRepository.updatePassword(id, newPassword);
+		    
+		    if (rowsUpdated == 0) {
+		        throw new RuntimeException("Failed to update password, no rows affected");
+		    }
+		    
+		    // Return the updated patient
+		    patient.setPassword(newPassword);
+		    return patient;
+		}
 } 

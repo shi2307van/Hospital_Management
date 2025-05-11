@@ -1,6 +1,7 @@
 package com.hospital.backend.controller;
 
 import com.hospital.backend.entity.Appointment;
+import com.hospital.backend.entity.Doctor;
 import com.hospital.backend.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,9 +68,7 @@ public class AppointmentController {
     }
 
     @PutMapping("/{id}/status")
-    public Appointment updateAppointmentStatus(
-            @PathVariable int id, 
-            @RequestParam String status) {
+    public Appointment updateAppointmentStatus(@PathVariable int id,@RequestParam String status) {
         return appointmentService.updateStatus(id, status);
     }
     
@@ -87,4 +86,5 @@ public class AppointmentController {
     public List<Appointment> getTodayAppointments(@PathVariable int doctorId) {
         return appointmentService.getTodayAppointments(doctorId);
     }
+
 }

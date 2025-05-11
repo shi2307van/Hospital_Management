@@ -15,4 +15,7 @@ public interface PatientService {
     boolean existsById(int id);
     public List<Patient> searchPatientsByName(String name);
     List<Patient> findByContactContaining(String contact);
+    List<Patient> findByDoctorId(int doctorId);
+    
+    Patient changePassword(int id, String currentPassword, String newPassword);
 }
