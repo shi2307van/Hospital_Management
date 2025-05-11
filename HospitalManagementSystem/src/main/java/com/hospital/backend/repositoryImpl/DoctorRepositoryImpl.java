@@ -1,6 +1,7 @@
 package com.hospital.backend.repositoryImpl;
 
 import com.hospital.backend.entity.Doctor;
+import com.hospital.backend.entity.Patient;
 import com.hospital.backend.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -78,18 +79,17 @@ public class DoctorRepositoryImpl implements DoctorRepository {
             return doctor;
         }else {
         // You need to add an else block here or handle updates else {
-            String sql = "UPDATE doctor SET Dr_name = ?, Mobile_no = ?, Email_id = ?, Gender = ?, Age = ?, Experience = ?, Password = ?, Sp_Id = ?, picture = ? WHERE DR_ID = ?";
+            String sql = "UPDATE doctor SET Dr_name = ?, Mobile_no = ?, Email_id = ?, Gender = ?, Age = ?, Experience = ?, Sp_Id = ?, picture = ? WHERE DR_ID = ?";
             jdbcTemplate.update(sql,
             		doctor.getDrName(),
                     doctor.getMobileNo(),
                     doctor.getEmailId(),
                     doctor.getGender(),
-                doctor.getAge(),
-                doctor.getExperience(),
-                doctor.getPassword(),
-                doctor.getSpId(),
-                doctor.getPicture(),
-                doctor.getDrId());
+                    doctor.getAge(),
+                    doctor.getExperience(),
+                    doctor.getSpId(),
+                    doctor.getPicture(),
+                    doctor.getDrId());
             return doctor;
         }
     
@@ -128,4 +128,5 @@ public class DoctorRepositoryImpl implements DoctorRepository {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count != null && count > 0;
     }
+  
 }

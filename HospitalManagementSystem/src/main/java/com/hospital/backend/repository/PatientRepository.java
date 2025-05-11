@@ -15,5 +15,6 @@ public interface PatientRepository {
     Patient update(Patient patient);
     List<Patient> getPatientsByBloodGroup(String bloodGroup);
 	boolean existsById(int id);
-	
+	List<Patient> findByDoctorId(int doctorId);
+	int updatePassword(int id, String newPassword);
 }

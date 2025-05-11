@@ -1,6 +1,7 @@
 package com.hospital.backend.serviceImpl;
 
 import com.hospital.backend.entity.Doctor;
+import com.hospital.backend.entity.Patient;
 import com.hospital.backend.repository.DoctorRepository;
 import com.hospital.backend.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,4 +78,5 @@ public class DoctorServiceImpl implements DoctorService {
 	public boolean existsById(int id) {
 		return doctorRepository.existsById(id);
 	}
+	
 }

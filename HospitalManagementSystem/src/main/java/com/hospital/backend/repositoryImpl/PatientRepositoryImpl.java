@@ -80,6 +80,9 @@ public class PatientRepositoryImpl implements PatientRepository {
                 patient.getPassword());
             return patient;
         } else {
+        	 if (patient.getName() == null || patient.getName().trim().isEmpty()) {
+        	        throw new IllegalArgumentException("Patient name cannot be null or empty");
+        	    }
             String sql = "UPDATE patient SET Name = ?, DOB = ?, Age = ?, Gender = ?, " +
                         "Blood_Group = ?, Mobile_No = ?, Email = ?, Address = ? WHERE P_ID = ?";
             jdbcTemplate.update(sql,
@@ -123,4 +126,19 @@ public class PatientRepositoryImpl implements PatientRepository {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count != null && count > 0;
     }
+    @Override
+    public List<Patient> findByDoctorId(int doctorId) {
+        String sql = "SELECT DISTINCT p.* FROM patient p JOIN appointment a ON p.P_ID = a.P_ID WHERE a.DR_ID = ?";
+        return jdbcTemplate.query(sql, patientRowMapper, doctorId);
+    }
+    @Override
+    public int updatePassword(int id, String newPassword) {
+        String sql = "UPDATE patient SET Password = ? WHERE P_ID = ?";
+        System.out.println("Executing SQL: " + sql.replace("?", "_") + 
+                           " with params: [" + newPassword + ", " + id + "]");
+        int rowsAffected = jdbcTemplate.update(sql, newPassword, id);
+        System.out.println("SQL execution complete, rows affected: " + rowsAffected);
+        return rowsAffected;
+    }
+    
 }

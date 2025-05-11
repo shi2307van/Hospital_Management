@@ -1,10 +1,12 @@
 package com.hospital.backend.controller;
 
 import com.hospital.backend.entity.Doctor;
+import com.hospital.backend.entity.Patient;
 import com.hospital.backend.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +20,9 @@ public class DoctorController {
     private DoctorService doctorService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public Doctor createDoctor(@RequestBody Doctor doctor) {
         return doctorService.saveDoctor(doctor);
     }
-
     @GetMapping
     public List<Doctor> getAllDoctors() {
         return doctorService.getAllDoctors();
@@ -64,4 +64,5 @@ public class DoctorController {
     public Optional<Doctor> findByEmail(@PathVariable String email) {
         return doctorService.findByEmail(email);
     }
+   
 }

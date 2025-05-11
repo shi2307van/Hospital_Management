@@ -1,6 +1,8 @@
 package com.hospital.backend.repositoryImpl;
 
+import com.hospital.backend.EmailService;
 import com.hospital.backend.entity.Appointment;
+import com.hospital.backend.entity.Doctor;
 import com.hospital.backend.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +20,9 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    
+    
+    
     private final RowMapper<Appointment> appointmentRowMapper = new RowMapper<Appointment>() {
         @Override
         public Appointment mapRow(ResultSet rs, int rowNum) throws SQLException {
